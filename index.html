@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Resume Score Checker — Optimize Your Resume for Applicant Tracking Systems</title>
+    <meta name="description" content="Free ATS Resume Score Checker. Upload your resume, get an instant ATS compatibility score, detailed remarks, and actionable suggestions to improve your chances of getting past applicant tracking systems.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                </div>
+                <span class="logo-text">ATS<span class="logo-accent">Score</span></span>
+            </div>
+            <nav class="nav-pills">
+                <button class="nav-pill active" data-section="upload">Upload</button>
+                <button class="nav-pill" data-section="results" id="nav-results" disabled>Results</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+
+            <!-- Hero Section -->
+            <section class="hero" id="hero-section">
+                <div class="hero-badge">
+                    <span class="pulse-dot"></span>
+                    Free ATS Analysis
+                </div>
+                <h1 class="hero-title">
+                    Check Your Resume's
+                    <span class="gradient-text">ATS Score</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Upload your resume and optionally paste a job description. Get an instant ATS compatibility score with detailed remarks and actionable improvements.
+                </p>
+            </section>
+
+            <!-- Upload Section -->
+            <section class="upload-section" id="upload-section">
+                <div class="upload-grid">
+                    <!-- Resume Upload Card -->
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <div class="card-icon card-icon-resume">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="card-title">Resume</h2>
+                                <p class="card-desc">Upload or paste your resume text</p>
+                            </div>
+                        </div>
+                        <div class="upload-tabs">
+                            <button class="upload-tab active" data-target="resume-file">Upload File</button>
+                            <button class="upload-tab" data-target="resume-text">Paste Text</button>
+                        </div>
+                        <div class="tab-content active" id="resume-file">
+                            <div class="dropzone" id="resume-dropzone">
+                                <div class="dropzone-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                </div>
+                                <p class="dropzone-text">Drag & drop your resume here</p>
+                                <p class="dropzone-hint">or click to browse</p>
+                                <p class="dropzone-formats">Supports PDF, DOCX, TXT</p>
+                                <input type="file" id="resume-input" accept=".pdf,.docx,.doc,.txt" hidden>
+                            </div>
+                            <div class="file-info hidden" id="resume-file-info">
+                                <div class="file-icon">📄</div>
+                                <div class="file-details">
+                                    <span class="file-name" id="resume-file-name"></span>
+                                    <span class="file-size" id="resume-file-size"></span>
+                                </div>
+                                <button class="file-remove" id="resume-file-remove" title="Remove file">✕</button>
+                            </div>
+                        </div>
+                        <div class="tab-content" id="resume-text">
+                            <textarea class="text-input" id="resume-textarea" placeholder="Paste your complete resume text here...&#10;&#10;Include all sections: Contact Info, Summary, Experience, Education, Skills, etc."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Job Description Card -->
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <div class="card-icon card-icon-job">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="card-title">Job Description</h2>
+                                <p class="card-desc">Optional — for keyword matching</p>
+                            </div>
+                        </div>
+                        <div class="jd-input-area">
+                            <textarea class="text-input jd-textarea" id="jd-textarea" placeholder="Paste the job description here for keyword matching analysis...&#10;&#10;This helps identify missing keywords and skills that the ATS might be looking for."></textarea>
+                        </div>
+                        <div class="jd-tip">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                            </svg>
+                            Adding a job description significantly improves analysis accuracy
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analyze Button -->
+                <div class="analyze-wrapper">
+                    <button class="btn-analyze" id="btn-analyze" disabled>
+                        <span class="btn-text">Analyze Resume</span>
+                        <span class="btn-loader hidden">
+                            <span class="spinner"></span>
+                            Analyzing...
+                        </span>
+                        <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Section (hidden initially) -->
+            <section class="results-section hidden" id="results-section">
+                <!-- Score Overview -->
+                <div class="score-overview">
+                    <div class="score-ring-wrapper">
+                        <svg class="score-ring" viewBox="0 0 200 200">
+                            <circle class="score-ring-bg" cx="100" cy="100" r="85"/>
+                            <circle class="score-ring-progress" cx="100" cy="100" r="85" id="score-ring-progress"/>
+                        </svg>
+                        <div class="score-value">
+                            <span class="score-number" id="score-number">0</span>
+                            <span class="score-max">/100</span>
+                        </div>
+                    </div>
+                    <div class="score-details">
+                        <h2 class="score-label" id="score-label">Analyzing...</h2>
+                        <p class="score-summary" id="score-summary"></p>
+                        <div class="score-tags" id="score-tags"></div>
+                    </div>
+                </div>
+
+                <!-- Category Breakdown -->
+                <div class="breakdown-section">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        Score Breakdown
+                    </h2>
+                    <div class="breakdown-grid" id="breakdown-grid"></div>
+                </div>
+
+                <!-- Keyword Analysis (shown when JD is provided) -->
+                <div class="keywords-section hidden" id="keywords-section">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        Keyword Analysis
+                    </h2>
+                    <div class="keywords-grid" id="keywords-grid">
+                        <div class="keywords-card glass-card">
+                            <h3 class="keywords-card-title found-title">✅ Keywords Found</h3>
+                            <div class="keywords-list" id="keywords-found"></div>
+                        </div>
+                        <div class="keywords-card glass-card">
+                            <h3 class="keywords-card-title missing-title">❌ Keywords Missing</h3>
+                            <div class="keywords-list" id="keywords-missing"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Remarks -->
+                <div class="remarks-section">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        Detailed Remarks & Suggestions
+                    </h2>
+                    <div class="remarks-list" id="remarks-list"></div>
+                </div>
+
+                <!-- Action Items -->
+                <div class="actions-section">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        Priority Action Items
+                    </h2>
+                    <div class="actions-list" id="actions-list"></div>
+                </div>
+
+                <!-- Re-analyze Button -->
+                <div class="analyze-wrapper">
+                    <button class="btn-analyze btn-secondary" id="btn-reanalyze">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <polyline points="23 4 23 10 17 10"/>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                        </svg>
+                        <span class="btn-text">Analyze Another Resume</span>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Built with precision. Your resume data is processed locally — nothing is sent to any server.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
